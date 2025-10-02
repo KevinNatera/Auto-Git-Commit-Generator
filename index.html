@@ -1,32 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Auto Git Commit Helper</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
     <div class="container">
-        <h1>Auto Git Commit Message Generator</h1>
-        <p> NOTE: This only works if you have already initialized your git repository and have commited the worked on files at least once. It does not work for untracked files.</p>
-        <p>Follow these steps to generate commit messages.</p>
-        <ol>
-            <li>Run the command below in your terminal to generate and copy your project's git diff:</li>
-            <div class="command-box">
-                <code id="diff-commands"></code>
-                <button id="copy-btn">Copy Command</button>
-            </div>
-            <li> After you run the command, all of the changes to your project since your last commit will be copied to your clipboard. Paste the copied diff in the box below:</li>
-        </ol>
+      <h1>Auto Git Commit Message Generator</h1>
+      <p>
+        NOTE: This only works if you have already initialized your git
+        repository and have commited the worked on files at least once. It does
+        not work for untracked files.
+      </p>
+      <p>Follow these steps to generate commit messages.</p>
+      <ol>
+        <li>
+          Run the command below in your terminal to generate and copy your
+          project's git diff:
+        </li>
+        <div class="command-box">
+          <code id="diff-commands"></code>
+          <button id="copy-btn">Copy Command</button>
+        </div>
+        <li>
+          After you run the command, all of the changes to your project since
+          your last commit will be copied to your clipboard. Paste the copied
+          diff in the box below:
+        </li>
+      </ol>
 
-        <textarea id="diff-input" placeholder="Paste your git diff here..."></textarea>
+      <textarea
+        id="diff-input"
+        placeholder="Paste your git diff here..."
+      ></textarea>
+
+      <div class="button-row">
         <button id="generate-btn">Generate Commit Messages</button>
+        <button id="clear-btn">Clear Diff Text Box</button>
+      </div>
+      <!-- <button id="generate-btn">Generate Commit Messages</button> -->
 
-        <h2>Suggested Commit Messages</h2>
-        <ul id="commit-messages"></ul>
+      <h2>Suggested Commit Messages</h2>
+      <ul id="commit-messages"></ul>
     </div>
 
     <script src="script.js"></script>
-</body>
+  </body>
 </html>

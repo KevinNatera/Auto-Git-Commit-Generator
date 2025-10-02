@@ -21,22 +21,6 @@ document.getElementById("copy-btn").addEventListener("click", () => {
     .catch((err) => alert("Failed to copy: " + err));
 });
 
-// Parse the pasted diff and generate commit messages
-document.getElementById("generate-btn").addEventListener("click", () => {
-  const diffText = document.getElementById("diff-input").value;
-  const commitMessages = parseGitDiff(diffText);
-  const listEl = document.getElementById("commit-messages");
-  listEl.innerHTML = "";
-
-  commitMessages.forEach((msg) => {
-    const li = document.createElement("li");
-    li.textContent = msg;
-    listEl.appendChild(li);
-  });
-
-  window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
-});
-
 function parseGitDiff(diff) {
   const lines = diff.split("\n");
   const fileCommits = {};
@@ -92,16 +76,6 @@ function parseGitDiff(diff) {
   }
 
   return commits;
-
-  // const commits = [];
-  // for (const [file, funcs] of Object.entries(fileCommits)) {
-  //   const funcsText =
-  //     funcs.size > 0 ? Array.from(funcs).join(", ") : "general update";
-  //   commits.push(`git add ${file}`);
-  //   commits.push(`git commit -m "update/add function(s) ${funcsText}"`);
-  // }
-
-  // return commits;
 }
 
 document.getElementById("generate-btn").addEventListener("click", () => {
@@ -138,11 +112,6 @@ document.getElementById("generate-btn").addEventListener("click", () => {
 
   listEl.appendChild(copyAllBtn);
 
-  // const copyInstruction = document.createElement("p");
-  // copyInstruction.textContent =
-  //   "3. Click 'Copy All' to copy these commands, then paste them into your terminal to finish committing!";
-  // listEl.appendChild(copyInstruction);
-
   const instructionsEl = document.createElement("div");
   instructionsEl.className = "instructions-box"; // match existing instruction CSS
   instructionsEl.textContent =
@@ -156,52 +125,20 @@ document.getElementById("generate-btn").addEventListener("click", () => {
   window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
 });
 
+// Clear the git diff input
+document.getElementById("clear-btn").addEventListener("click", () => {
+  document.getElementById("diff-input").value = "";
 
-// Build commit messages
-// const commits = [];
-// for (const [file, funcs] of Object.entries(fileCommits)) {
-//   if (funcs.size > 0) {
-//     commits.push(
-//       `${file}: update/add function(s) ${Array.from(funcs).join(", ")}`
-//     );
-//   } else {
-//     commits.push(`${file}: general update`);
-//   }
-// }
+  // Clear generated commit messages
+  const commitList = document.getElementById("commit-messages");
+  if (commitList) commitList.innerHTML = "";
 
-// Function to parse git diff for filenames and function definitions
-// function parseGitDiff(diff) {
-//     const lines = diff.split('\n');
-//     const fileCommits = {};
-//     let currentFile = '';
+  // Hide copy button if you’re using one for commits
+  const copyAllBtn = document.getElementById("copy-all-btn");
+  if (copyAllBtn) copyAllBtn.remove();
 
-//     lines.forEach(line => {
-//         // Detect file change
-//         const fileMatch = line.match(/^diff --git a\/(.+?) b\/(.+)/);
-//         if (fileMatch) {
-//             currentFile = fileMatch[2];
-//             if (!fileCommits[currentFile]) fileCommits[currentFile] = new Set();
-//         }
-
-//         // Detect new or modified JS/Python functions
-//         if (currentFile) {
-//             let funcMatch = line.match(/^\+.*function (\w+)\(/); // JS function
-//             if (!funcMatch) funcMatch = line.match(/^\+.*def (\w+)\(/); // Python function
-//             if (funcMatch) {
-//                 fileCommits[currentFile].add(funcMatch[1]);
-//             }
-//         }
-//     });
-
-//     // Build commit messages
-//     const commits = [];
-//     for (const [file, funcs] of Object.entries(fileCommits)) {
-//         if (funcs.size > 0) {
-//             commits.push(`${file}: update/add function(s) ${Array.from(funcs).join(', ')}`);
-//         } else {
-//             commits.push(`${file}: general update`);
-//         }
-//     }
-
-//     return commits;
-// }
+  const instructionsEl = document.querySelector(".instructions-box");
+  if (instructionsEl) {
+    instructionsEl.remove(); // or instructionsEl.style.display = "none";
+  }
+});
