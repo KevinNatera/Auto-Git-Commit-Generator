@@ -1,10 +1,10 @@
 const diffCommandsEl = document.getElementById("diff-commands");
-const platform = navigator.platform.toLowerCase();
+const userAgent = navigator.userAgent.toLowerCase();
 let diffCommand = "";
 
-if (platform.includes("mac")) {
+if (userAgent.includes("mac")) {
   diffCommand = "git --no-pager diff | pbcopy";
-} else if (platform.includes("win")) {
+} else if (userAgent.includes("win")) {
   diffCommand = "git --no-pager diff | Set-Clipboard";
 } else {
   // assume Linux
@@ -84,45 +84,49 @@ document.getElementById("generate-btn").addEventListener("click", () => {
   const listEl = document.getElementById("commit-messages");
   listEl.innerHTML = "";
 
-  // Step 1: Display commits
-  commitMessages.forEach((msg) => {
-    const li = document.createElement("li");
-    li.textContent = msg;
-    listEl.appendChild(li);
-  });
+  //Display commits
+  if (commitMessages.length > 0) {
+    commitMessages.forEach((msg) => {
+      const li = document.createElement("li");
+      li.textContent = msg;
+      listEl.appendChild(li);
+    });
 
-  // Step 3: Copy button + extra instruction
-  const copyAllBtn = document.createElement("button");
-  copyAllBtn.textContent = "Copy All";
-  copyAllBtn.style.marginTop = "0.5em";
-  copyAllBtn.id = "copy-all-btn";
+    // Copy button + extra instruction
+    const copyAllBtn = document.createElement("button");
+    copyAllBtn.textContent = "Copy All";
+    copyAllBtn.style.marginTop = "0.5em";
+    copyAllBtn.id = "copy-all-btn";
 
-  copyAllBtn.addEventListener("click", () => {
-    const commits = Array.from(document.querySelectorAll("#commit-messages li"))
-      .map((li) => li.textContent)
-      .join("\n");
+    copyAllBtn.addEventListener("click", () => {
+      const commits = Array.from(
+        document.querySelectorAll("#commit-messages li")
+      )
+        .map((li) => li.textContent)
+        .join("\n");
 
-    if (commits) {
-      navigator.clipboard
-        .writeText(commits)
-        .then(() => alert("All commit commands copied!"))
-        .catch((err) => alert("Failed to copy: " + err));
-    }
-  });
+      if (commits) {
+        navigator.clipboard
+          .writeText(commits)
+          .then(() => alert("All commit commands copied!"))
+          .catch((err) => alert("Failed to copy: " + err));
+      }
+    });
 
-  listEl.appendChild(copyAllBtn);
+    listEl.appendChild(copyAllBtn);
 
-  const instructionsEl = document.createElement("div");
-  instructionsEl.className = "instructions-box"; // match existing instruction CSS
-  instructionsEl.textContent =
-    "3. Click 'Copy All' to copy these commands to your clipboard, then paste them into your terminal and hit enter to finish committing!";
+    const instructionsEl = document.createElement("div");
+    instructionsEl.className = "instructions-box"; // match existing instruction CSS
+    instructionsEl.textContent =
+      "3. Click 'Copy All' to copy these commands to your clipboard, then paste them into your terminal and hit enter to finish committing!";
 
-  // 2. Append to the bottom of the page
-  const container = document.querySelector(".container");
-  container.appendChild(instructionsEl);
+    //Append to the bottom of the page
+    const container = document.querySelector(".container");
+    container.appendChild(instructionsEl);
 
-  // Scroll to bottom of page
-  window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+    // Scroll to bottom of page
+    window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+  }
 });
 
 // Clear the git diff input
@@ -133,12 +137,13 @@ document.getElementById("clear-btn").addEventListener("click", () => {
   const commitList = document.getElementById("commit-messages");
   if (commitList) commitList.innerHTML = "";
 
-  // Hide copy button if you’re using one for commits
+  // Remove copy button
   const copyAllBtn = document.getElementById("copy-all-btn");
   if (copyAllBtn) copyAllBtn.remove();
 
+  //Remove step 3 instructions
   const instructionsEl = document.querySelector(".instructions-box");
   if (instructionsEl) {
-    instructionsEl.remove(); // or instructionsEl.style.display = "none";
+    instructionsEl.remove();
   }
 });
